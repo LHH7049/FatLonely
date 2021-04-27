@@ -1,0 +1,6 @@
+db:
+  name: ${db.fatlonely.Driver}
+  url: ${db.fatlonely.url}
+  username: ${db.fatlonely.name}
+  password: ${db.fatlonely.password}
+  usePlainText: ${db.fatlonely.usePlainText}
