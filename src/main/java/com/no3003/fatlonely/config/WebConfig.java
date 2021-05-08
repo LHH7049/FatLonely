@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> loginExcludePath = Arrays.asList("/**/*.html", "/**/*.js", "/**/*.css");
+        List<String> loginExcludePath = Arrays.asList("/access/*", "/**/*.html", "/**/*.js", "/**/*.css");
         InterceptorRegistration loginInterceptor = registry.addInterceptor(new LoginInterceptor());
         loginInterceptor.addPathPatterns("/**");
         loginInterceptor.excludePathPatterns(loginExcludePath);

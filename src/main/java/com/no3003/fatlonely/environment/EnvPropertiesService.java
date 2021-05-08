@@ -1,7 +1,5 @@
-package com.no3003.fatlonely.service;
+package com.no3003.fatlonely.environment;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.FileInputStream;

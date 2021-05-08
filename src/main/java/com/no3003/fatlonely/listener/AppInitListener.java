@@ -1,6 +1,6 @@
 package com.no3003.fatlonely.listener;
 
-import com.no3003.fatlonely.service.EnvPropertiesService;
+import com.no3003.fatlonely.environment.EnvPropertiesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,14 +19,13 @@ public class AppInitListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("========初始化加载========");
         try {
             EnvPropertiesService.INSTANCE.loadEnv();
+            logger.info("======= 初始化完毕========");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        logger.info("======= 初始化完毕========");
     }
 
     @Override

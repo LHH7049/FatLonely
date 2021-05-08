@@ -19,8 +19,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (jsessionid != null){
             return true;
         }
-        StringBuffer url = request.getRequestURL();
-        String loginUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/login.do").toString();
+//        StringBuffer url = request.getRequestURL();
+        String loginUrl = request.getContextPath() + "/login.html";
         response.sendRedirect(loginUrl);
         return false;
     }

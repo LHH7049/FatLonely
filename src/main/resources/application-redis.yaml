@@ -1,0 +1,8 @@
+spring:
+  redis:
+    host: ${redis.fatlonely.host}
+    password: ${redis.fatlonely.password}
+    port: ${redis.fatlonely.port}
+    jedis:
+      pool:
+        max-active: ${redis.fatlonely.max-active}

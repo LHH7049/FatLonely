@@ -82,7 +82,7 @@
 
 
     <springProfile name="dev">
-        <logger name="com.bt" additivity="false">
+        <logger name="com.no3003" additivity="false">
             <level value="DEBUG"/>
             <appender-ref ref="CONSOLE"/>
         </logger>
@@ -92,7 +92,7 @@
     </springProfile>
 
     <springProfile name="test">
-        <logger name="com.bt" additivity="false">
+        <logger name="com.no3003" additivity="false">
             <level value="DEBUG"/>
             <appender-ref ref="DEBUG"/>
             <appender-ref ref="INFO"/>
