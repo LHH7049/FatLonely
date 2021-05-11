@@ -21,6 +21,12 @@ public class Result<T> {
         this.value = value;
     }
 
+    public Result(ResultCode resultCode){
+        this.code = resultCode.getCode();
+        this.msg = resultCode.getMsg();
+        this.value = null;
+    }
+
     public Result(ResultCode resultCode, T value){
         this.code = resultCode.getCode();
         this.msg = resultCode.getMsg();

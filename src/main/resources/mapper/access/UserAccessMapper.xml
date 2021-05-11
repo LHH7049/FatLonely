@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.no3003.fatlonely.access.mapper.UserAccessMapper">
+    <select id="getUserAccessByAccount" resultType="com.no3003.fatlonely.access.data.UserAccessDo">
+        SELECT * from user_access where account = #{account};
+    </select>
+
+    <select id="existsAccount">
+        select id from user_access where account = #{account};
+    </select>
+
+    <insert id="addUserAccess">
+        insert into user_access(account, pwd, registerTime, lastLoginTime, updateTime)
+        values (#{do.account}, #{do.pwd}, #{do.registerTime}, #{do.lastLoginTime}, #{do.updateTime});
+    </insert>
+
+    <update id="updateUserAccessLastRemarksByAccount">
+        update user_access set lastLoginIp = #{lastLoginIp}, lastLoginTime = #{lastLoginTime} where account = #{account};
+    </update>
+
+    <delete id="deleteUserAccessByAccount">
+        delete from user_access where account = #{account};
+    </delete>
+</mapper>

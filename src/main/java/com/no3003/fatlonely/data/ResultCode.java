@@ -6,8 +6,14 @@ package com.no3003.fatlonely.data;
  */
 public enum ResultCode {
     SUCCESS(0, "操作成功"),
-    ERROR(-1, "操作失败");
+    ERROR(-1, "操作失败"),
 
+    ACCOUNT_PWD_ERROR(4001, "账号或密码错误"),
+    ACCOUNT_NOT_EXISTS(4002, "账号不存在"),
+    ACCOUNT_PWD_EMPTY(4003, "账号或密码不能为空"),
+    ACCOUNT_PWD_VERIFY_FAIL(4004, "账号或密码校验不通过"),
+    VERIFY_CODE_FAIL(4005, "验证码错误"),
+    ACCOUNT_EXISTS(4006, "账号已存在");
 
     private int code;
     private String msg;

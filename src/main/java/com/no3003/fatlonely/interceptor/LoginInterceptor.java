@@ -1,5 +1,7 @@
 package com.no3003.fatlonely.interceptor;
 
+import com.no3003.fatlonely.access.data.UserAccessConstant;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +17,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        Object jsessionid = session.getAttribute("JSESSIONID");
-        if (jsessionid != null){
+        String uid = (String) session.getAttribute(UserAccessConstant.F_L_ACCOUNT);
+        if (StringUtils.hasText(uid)){
             return true;
         }
 //        StringBuffer url = request.getRequestURL();
