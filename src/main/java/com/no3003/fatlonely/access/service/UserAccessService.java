@@ -9,8 +9,8 @@ import com.no3003.fatlonely.data.Result;
 import com.no3003.fatlonely.access.dto.LoginReq;
 import com.no3003.fatlonely.access.dto.RegisterReq;
 import com.no3003.fatlonely.data.ResultCode;
+import com.no3003.fatlonely.util.HashUtil;
 import com.no3003.fatlonely.util.HttpUtil;
-import com.no3003.fatlonely.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Author: lz
@@ -71,7 +73,7 @@ public class UserAccessService {
             return new Result<>(ResultCode.ACCOUNT_PWD_EMPTY);
         }
         // 账号校验
-        if (!verifyAccount(registerReq.getAccount()) || !verifyPwd(registerReq.getPwd())){
+        if (!verifyAccount(registerReq.getAccount())){
             return new Result<>(ResultCode.ACCOUNT_PWD_VERIFY_FAIL);
         }
         // 验证码校验
@@ -79,7 +81,7 @@ public class UserAccessService {
             return new Result<>(ResultCode.VERIFY_CODE_FAIL);
         }
         // 入库（判存）
-        UserAccessDo userAccess = new UserAccessDo(registerReq.getAccount(), registerReq.getPwd(), new Date(), null, null, null);
+        UserAccessDo userAccess = new UserAccessDo(registerReq.getAccount(), HashUtil.addHashSalt(registerReq.getPwd()), new Date(), null, null, null);
         if(userAccessMapper.addUserAccess(userAccess) > 0){
             return new Result<>(ResultCode.ACCOUNT_EXISTS);
         }
@@ -89,11 +91,14 @@ public class UserAccessService {
     }
 
     private boolean verifyAccount(String account){
-        return false;
-    }
-
-    private boolean verifyPwd(String pwd){
-        return false;
+        // 拒绝非法字符
+        String regex = "[!@#$￥^%.&*()\\\\/]+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(account);
+        if (matcher.find()){
+            return false;
+        }
+        return true;
     }
 
     private String getCaptchaCode(HttpServletRequest request){
