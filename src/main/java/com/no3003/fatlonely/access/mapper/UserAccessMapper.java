@@ -15,13 +15,13 @@ import java.util.Date;
 @Repository
 public interface UserAccessMapper {
 
-    UserAccessDo getUserAccessByAccount(@Param("account") String account);
+    UserAccessDo getUserAccessByAccount(@Param("account") int account);
 
     int existsAccount(@Param("account") String account);
 
     int addUserAccess(@Param("do") UserAccessDo userAccess);
 
-    int updateUserAccessLastRemarksByAccount(@Param("account") String account, @Param("lastLoginIp") String lastLoginIp, @Param("lastLoginTime") Date lastLoginTime);
+    int updateUserAccessLastRemarksByAccount(@Param("account") int account, @Param("lastLoginIp") String lastLoginIp, @Param("lastLoginTime") Date lastLoginTime);
 
     int updateUserAccess(@Param("userAccess") UserAccessDo userAccess);
 

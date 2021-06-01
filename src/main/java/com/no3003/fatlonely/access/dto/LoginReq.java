@@ -10,7 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class LoginReq {
-    private String account;
+    private int account;
     private String pwd;
     private int remember;
 

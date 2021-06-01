@@ -11,8 +11,10 @@ import com.no3003.fatlonely.access.dto.RegisterReq;
 import com.no3003.fatlonely.data.ResultCode;
 import com.no3003.fatlonely.util.HashUtil;
 import com.no3003.fatlonely.util.HttpUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.no3003.fatlonely.util.RedisUtil;
+import com.no3003.fatlonely.util.idgenerator.IDGeneratorUtil;
+import com.no3003.fatlonely.util.idgenerator.IDGroup;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -30,17 +32,18 @@ import java.util.regex.Pattern;
  * @Author: lz
  * @Date: 2021/5/8 11:12
  */
+@Slf4j
 @Service
 public class UserAccessService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserAccessService.class);
-
     @Autowired
     private UserAccessMapper userAccessMapper;
+    @Autowired
+    private RedisUtil redisUtil;
 
     public Result<Void> login(HttpServletRequest request, HttpServletResponse response, LoginReq loginReq){
         // 账号密码校验
-        if (!StringUtils.hasText(loginReq.getAccount()) || !StringUtils.hasText(loginReq.getPwd())){
+        if (loginReq.getAccount() <= 0 || !StringUtils.hasText(loginReq.getPwd())){
             return new Result<>(ResultCode.ACCOUNT_PWD_EMPTY);
         }
         // 从数据库中取出账号密码
@@ -49,7 +52,7 @@ public class UserAccessService {
         if (userAccess == null){
             return new Result<>(ResultCode.ACCOUNT_NOT_EXISTS);
         }
-        if (!userAccess.getAccount().equals(loginReq.getAccount()) || !userAccess.getPwd().equals(loginReq.getPwd())){
+        if (userAccess.getAccount() != loginReq.getAccount() || !userAccess.getPwd().equals(loginReq.getPwd())){
             return new Result<>(ResultCode.ACCOUNT_PWD_ERROR);
         }
         // 更新用户登录信息
@@ -69,19 +72,21 @@ public class UserAccessService {
 
     public Result<Void> register(HttpServletRequest request, RegisterReq registerReq){
         // 账密验证（判空，判特殊字符）
-        if (!StringUtils.hasText(registerReq.getAccount()) || !StringUtils.hasText(registerReq.getPwd())){
+        if (!StringUtils.hasText(registerReq.getAccountName()) || !StringUtils.hasText(registerReq.getPwd())){
             return new Result<>(ResultCode.ACCOUNT_PWD_EMPTY);
         }
-        // 账号校验
-        if (!verifyAccount(registerReq.getAccount())){
-            return new Result<>(ResultCode.ACCOUNT_PWD_VERIFY_FAIL);
+        // 账号名称校验
+        if (!verifyAccount(registerReq.getAccountName())){
+            return new Result<>(ResultCode.ACCOUNT_NAME_VERIFY_FAIL);
         }
         // 验证码校验
         if (!registerReq.getCode().equals(getCaptchaCode(request))){
             return new Result<>(ResultCode.VERIFY_CODE_FAIL);
         }
+        // 生成账号
+        int account = IDGeneratorUtil.getIdFromGroup(IDGroup.ACCOUNT_ID);
         // 入库（判存）
-        UserAccessDo userAccess = new UserAccessDo(registerReq.getAccount(), HashUtil.addHashSalt(registerReq.getPwd()), new Date(), null, null, null);
+        UserAccessDo userAccess = new UserAccessDo(account, registerReq.getAccountName(), HashUtil.addHashSalt(registerReq.getPwd()), new Date(), null, null, null);
         if(userAccessMapper.addUserAccess(userAccess) > 0){
             return new Result<>(ResultCode.ACCOUNT_EXISTS);
         }
@@ -102,7 +107,8 @@ public class UserAccessService {
     }
 
     private String getCaptchaCode(HttpServletRequest request){
-        return (String) request.getSession().getAttribute(UserAccessConstant.F_L_CAPTCHA_KEY);
+        return redisUtil.get(String.format(UserAccessConstant.F_L_CAPTCHA_KEY, request.getRequestedSessionId()));
+//        return (String) request.getSession().getAttribute(UserAccessConstant.F_L_CAPTCHA_KEY);
     }
 
     public Result<Void> logout(HttpServletRequest request, HttpServletResponse response){
@@ -117,13 +123,14 @@ public class UserAccessService {
             GifCaptcha captcha = CaptchaUtil.createGifCaptcha(400, 200, 4);
             captcha.write(os);
             if (!captcha.verify(captcha.getCode())) {
-                logger.warn("验证码无效, captcha:{}", captcha.getCode());
+                log.warn("验证码无效, captcha:{}", captcha.getCode());
                 return Result.errorResult("获取验证码失效，请刷新重试");
             }
-            request.getSession().setAttribute(UserAccessConstant.F_L_CAPTCHA_KEY, captcha.getCode());
+            redisUtil.setEx(String.format(UserAccessConstant.F_L_CAPTCHA_KEY, request.getRequestedSessionId()), captcha.getCode(), UserAccessConstant.THIRTY_MINUTE_SECOND * 1000);
+//            request.getSession().setAttribute(UserAccessConstant.F_L_CAPTCHA_KEY, captcha.getCode());
             return Result.successResult();
         } catch (IOException e) {
-            logger.error("写入验证码异常", e);
+            log.error("写入验证码异常", e);
         }
         return new Result<>(ResultCode.ERROR);
     }

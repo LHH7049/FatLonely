@@ -1,6 +1,6 @@
 package com.no3003.fatlonely.listener;
 
-import com.no3003.fatlonely.environment.EnvPropertiesService;
+import com.no3003.fatlonely.env.EnvPropertiesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

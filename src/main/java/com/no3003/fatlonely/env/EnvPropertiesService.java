@@ -1,4 +1,4 @@
-package com.no3003.fatlonely.environment;
+package com.no3003.fatlonely.env;
 
 import org.springframework.util.StringUtils;
 

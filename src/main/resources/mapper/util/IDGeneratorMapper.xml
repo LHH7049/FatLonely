@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.no3003.fatlonely.util.idgenerator.IDGeneratorMapper">
+    <select id="getDBGenerator" resultType="com.no3003.fatlonely.util.idgenerator.IDGenerator">
+        SELECT * from id_generator where groupCode = #{groupCode} and dbCur = #{dbCur};
+    </select>
+
+    <select id="getDBCur">
+        select * from id_generator where groupCode = #{groupCode}
+    </select>
+</mapper>

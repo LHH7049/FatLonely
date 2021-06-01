@@ -8,7 +8,9 @@ public class UserAccessConstant {
     public static final String F_L_ACCOUNT = "F_L_ACCOUNT";
     public static final String F_L_REMEMBER_COOKIE_KEY = "F_L_REMEMBER_COOKIE_KEY";
 
-    public static final String F_L_CAPTCHA_KEY = "F_L_CAPTCHA_KEY";
+    public static final String F_L_CAPTCHA_KEY = "F_L_CAPTCHA_KEY_%s";
 
     public static final int THIRTY_DAYS_SECOND = 30 * 24 * 60 * 60;
+
+    public static final int THIRTY_MINUTE_SECOND = 30 * 60;
 }

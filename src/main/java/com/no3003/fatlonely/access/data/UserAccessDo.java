@@ -15,15 +15,17 @@ import java.util.Date;
 @Data
 public class UserAccessDo {
     private int id;
-    private String account;
+    private int account;
+    private String accountName;
     private String pwd;
     private Date registerTime;
     private String lastLoginIp;
     private Date lastLoginTime;
     private Date updateTime;
 
-    public UserAccessDo(String account, String pwd, Date registerTime, String lastLoginIp, Date lastLoginTime, Date updateTime) {
+    public UserAccessDo(int account, String accountName, String pwd, Date registerTime, String lastLoginIp, Date lastLoginTime, Date updateTime) {
         this.account = account;
+        this.accountName = accountName;
         this.pwd = pwd;
         this.registerTime = registerTime;
         this.lastLoginIp = lastLoginIp;

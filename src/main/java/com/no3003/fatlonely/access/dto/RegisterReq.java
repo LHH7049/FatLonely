@@ -10,7 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class RegisterReq {
-    private String account;
+    private String accountName;
     private String pwd;
     private String code;
 }
